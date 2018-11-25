@@ -18,9 +18,27 @@
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BrB-h1-WRS">
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="6bP-tb-bES">
                                 <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
-                            </arscnView>
+                                <subviews>
+                                    <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BrB-h1-WRS">
+                                        <rect key="frame" x="0.0" y="0.0" width="375" height="333.5"/>
+                                    </arscnView>
+                                    <arscnView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Rlz-Pn-dwP" userLabel="Scene View2">
+                                        <rect key="frame" x="0.0" y="333.5" width="375" height="333.5"/>
+                                    </arscnView>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstItem="BrB-h1-WRS" firstAttribute="width" secondItem="Rlz-Pn-dwP" secondAttribute="width" id="GCB-wi-2xq"/>
+                                    <constraint firstItem="BrB-h1-WRS" firstAttribute="height" secondItem="Rlz-Pn-dwP" secondAttribute="height" id="h7V-bU-3Ix"/>
+                                </constraints>
+                            </stackView>
+                            <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gDL-JX-0rq">
+                                <rect key="frame" x="20" y="20" width="51" height="31"/>
+                                <connections>
+                                    <action selector="switchVR:" destination="BV1-FR-VrT" eventType="valueChanged" id="3kd-OC-Ug4"/>
+                                </connections>
+                            </switch>
                             <button opaque="NO" contentMode="scaleAspectFit" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Ayb-B1-KKH">
                                 <rect key="frame" x="154" y="580" width="67" height="67"/>
                                 <constraints>
@@ -35,17 +53,22 @@
                         </subviews>
                         <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
+                            <constraint firstItem="6bP-tb-bES" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="10X-C1-Geq"/>
                             <constraint firstItem="Ayb-B1-KKH" firstAttribute="centerX" secondItem="U0K-SW-4ec" secondAttribute="centerX" id="3kJ-Mq-o1K"/>
                             <constraint firstItem="fQZ-KI-GVf" firstAttribute="bottom" secondItem="Ayb-B1-KKH" secondAttribute="bottom" constant="20" id="4KS-ot-VsC"/>
-                            <constraint firstItem="BrB-h1-WRS" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="GsS-dJ-CKf"/>
-                            <constraint firstItem="BrB-h1-WRS" firstAttribute="bottom" secondItem="fQZ-KI-GVf" secondAttribute="bottom" id="VpT-BR-CcM"/>
-                            <constraint firstItem="BrB-h1-WRS" firstAttribute="trailing" secondItem="fQZ-KI-GVf" secondAttribute="trailing" id="XyZ-9z-H8e"/>
-                            <constraint firstItem="BrB-h1-WRS" firstAttribute="top" secondItem="U0K-SW-4ec" secondAttribute="top" id="rJc-2c-zQA"/>
+                            <constraint firstAttribute="bottom" secondItem="6bP-tb-bES" secondAttribute="bottom" id="Axf-Uk-PAk"/>
+                            <constraint firstItem="gDL-JX-0rq" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" constant="20" id="l4A-tj-AcT"/>
+                            <constraint firstItem="gDL-JX-0rq" firstAttribute="top" secondItem="fQZ-KI-GVf" secondAttribute="top" id="tcS-Jc-iwe"/>
+                            <constraint firstItem="6bP-tb-bES" firstAttribute="trailing" secondItem="fQZ-KI-GVf" secondAttribute="trailing" id="wUS-cT-YLA"/>
+                            <constraint firstItem="6bP-tb-bES" firstAttribute="leading" secondItem="fQZ-KI-GVf" secondAttribute="leading" id="yJY-JN-I9p"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="fQZ-KI-GVf"/>
                     </view>
                     <connections>
+                        <outlet property="galleryButton" destination="Ayb-B1-KKH" id="JER-cW-hIy"/>
+                        <outlet property="isVRSwitch" destination="gDL-JX-0rq" id="suY-VG-hrB"/>
                         <outlet property="sceneView" destination="BrB-h1-WRS" id="5nT-qQ-ynl"/>
+                        <outlet property="sceneView2" destination="Rlz-Pn-dwP" id="Vsc-cK-wSr"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="SZV-WD-TEh" sceneMemberID="firstResponder"/>

@@ -12,7 +12,7 @@ class SketchListViewController: UIViewController {
     
     @IBOutlet weak var tableView: UITableView!
     var viewController: ViewController?
-    var imageNames = ["1", "2", "7", "guse"]
+    var imageNames = ["1", "2", "7", "guse","face1","face2", "face3", "alex1", "alex2","wth"]
     
     override func viewDidLoad() {
         super.viewDidLoad()

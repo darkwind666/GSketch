@@ -15,7 +15,10 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     static let selectedImageKey = "SimulatedStartDate"
     
     @IBOutlet var sceneView: ARSCNView!
+    @IBOutlet weak var sceneView2: ARSCNView!
     
+    @IBOutlet weak var isVRSwitch: UISwitch!
+    @IBOutlet weak var galleryButton: UIButton!
     fileprivate lazy var session = ARSession()
     fileprivate lazy var sessionConfiguration = ARWorldTrackingConfiguration()
     var nodeWeCanChange: SCNNode?
@@ -39,12 +42,31 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         
         let pinchGesture = UIPinchGestureRecognizer(target: self, action: #selector(didPinch(_:)))
         sceneView.addGestureRecognizer(pinchGesture)
+        
+        let scene = SCNScene()
+        sceneView.scene = scene
+        sceneView2.scene = scene
+        sceneView2.isPlaying = true
+        
+        if isVRSwitch.isOn == true {
+            sceneView2.isHidden = true
+        }
     }
     
     fileprivate func setupScene() {
         sceneView.delegate = self
         sceneView.session = session
         session.run(sessionConfiguration, options: [.resetTracking, .removeExistingAnchors])
+    }
+    
+    @IBAction func switchVR(_ sender: Any) {
+        if isVRSwitch.isOn == true {
+            sceneView2.isHidden = true
+            galleryButton.isHidden = false
+        } else {
+            sceneView2.isHidden = false
+            galleryButton.isHidden = true
+        }
     }
     
     
@@ -59,7 +81,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     }
     
     func selectImage(imageName: String) {
-        nodeWeCanChange?.geometry?.firstMaterial?.diffuse.contents = UIImage(named: imageName)
+        nodeWeCanChange?.geometry?.firstMaterial?.diffuse.contents = UIImage(named: imageName)?.image(alpha: 0.5)
     }
     
     @objc
@@ -212,7 +234,8 @@ class ViewController: UIViewController, ARSCNViewDelegate {
             
             //e. Set It's Colour To Red
             //nodeWeCanChange?.geometry?.firstMaterial?.diffuse.contents = UIColor.red
-            nodeWeCanChange?.geometry?.firstMaterial?.diffuse.contents = UIImage(named: "guse")
+            nodeWeCanChange?.geometry?.firstMaterial?.diffuse.contents = UIImage(named: "guse")?.image(alpha: 0.5)
+            
             
             //f. Add It To Our Node & Thus The Hiearchy
             node.addChildNode(nodeWeCanChange!)
@@ -229,8 +252,41 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     
     func renderer(_ renderer: SCNSceneRenderer, updateAtTime time: TimeInterval) {
         
-//        DispatchQueue.main.async {
-//            self.virtualObjectInteraction.updateObjectToCurrentTrackingPosition()
-//        }
+        DispatchQueue.main.async {
+            self.updateFrame()
+        }
+        
+    }
+    
+    func updateFrame() {
+        
+        // Clone pointOfView for Second View
+        let pointOfView : SCNNode = (sceneView.pointOfView?.clone())!
+        
+        // Determine Adjusted Position for Right Eye
+        let orientation : SCNQuaternion = pointOfView.orientation
+        let orientationQuaternion : GLKQuaternion = GLKQuaternionMake(orientation.x, orientation.y, orientation.z, orientation.w)
+        let eyePos : GLKVector3 = GLKVector3Make(1.0, 0.0, 0.0)
+        let rotatedEyePos : GLKVector3 = GLKQuaternionRotateVector3(orientationQuaternion, eyePos)
+        let rotatedEyePosSCNV : SCNVector3 = SCNVector3Make(rotatedEyePos.x, rotatedEyePos.y, rotatedEyePos.z)
+        
+        let mag : Float = 0.066 // This is the value for the distance between two pupils (in metres). The Interpupilary Distance (IPD).
+        pointOfView.position.x += rotatedEyePosSCNV.x * mag
+        pointOfView.position.y += rotatedEyePosSCNV.y * mag
+        pointOfView.position.z += rotatedEyePosSCNV.z * mag
+        
+        // Set PointOfView for SecondView
+        sceneView2.pointOfView = pointOfView
+        
+    }
+}
+
+extension UIImage {
+    func image(alpha: CGFloat) -> UIImage? {
+        UIGraphicsBeginImageContextWithOptions(size, false, scale)
+        draw(at: .zero, blendMode: .normal, alpha: alpha)
+        let newImage = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        return newImage
     }
 }
