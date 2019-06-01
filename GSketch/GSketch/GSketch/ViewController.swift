@@ -9,6 +9,7 @@
 import UIKit
 import SceneKit
 import ARKit
+import Vision
 
 class ViewController: UIViewController, ARSCNViewDelegate {
 
@@ -18,6 +19,7 @@ class ViewController: UIViewController, ARSCNViewDelegate {
     @IBOutlet weak var sceneView2: ARSCNView!
     
     @IBOutlet weak var isVRSwitch: UISwitch!
+    @IBOutlet weak var isVerticalPlane: UISwitch!
     @IBOutlet weak var galleryButton: UIButton!
     fileprivate lazy var session = ARSession()
     fileprivate lazy var sessionConfiguration = ARWorldTrackingConfiguration()
@@ -69,6 +71,20 @@ class ViewController: UIViewController, ARSCNViewDelegate {
         }
     }
     
+    @IBAction func switchPlaneType(_ sender: Any) {
+        
+        nodeWeCanChange = nil
+        
+        if isVerticalPlane.isOn == true {
+            let configuration = ARWorldTrackingConfiguration()
+            configuration.planeDetection = .vertical
+            sceneView.session.run(configuration)
+        } else {
+            let configuration = ARWorldTrackingConfiguration()
+            configuration.planeDetection = .horizontal
+            sceneView.session.run(configuration)
+        }
+    }
     
     @IBAction func selectPaintPressed(_ sender: Any) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
